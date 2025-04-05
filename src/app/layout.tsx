@@ -1,27 +1,43 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { ThemeProvider } from "@/providers/ThemeProvider";
+import type { Metadata } from "next";
+import { Inter } from "next/font/google";
+import { ThemeProvider } from "@/components/theme-provider";
+import { Navigation } from "@/components/navigation";
+import { Toaster } from "@/components/ui/sonner";
+
+const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "LOSLC | ETHIX Challenge 2025",
-  description: "Venez montrer vos talents de tech bro ou tech sis ! 🚀",
+  title: "LOSLC Competition - Linux & Open Source Lovers",
+  description:
+    "Join the Linux & Open Source Lovers Competition in collaboration with ETHIX community. Showcase your development and cybersecurity skills!",
+  keywords: [
+    "Linux",
+    "Open Source",
+    "Competition",
+    "Development",
+    "Cybersecurity",
+    "ETHIX",
+  ],
 };
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
-    <html lang="en">
-      <body>
+    <html lang="en" suppressHydrationWarning>
+      <body className={inter.className}>
         <ThemeProvider
-          attribute={"class"}
-          defaultTheme={"default"}
-          enableSystem={false}
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
         >
-          {children}
+          <Navigation />
+          <main className="min-h-screen pt-16">{children}</main>
+          <Toaster />
         </ThemeProvider>
       </body>
     </html>
