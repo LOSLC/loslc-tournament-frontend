@@ -1,30 +1,57 @@
 import { API_VERSION, SERVER_URL } from "@/config/env";
-import type { LoginRequestSchema } from "@/schemas/authSchemas";
 import axios from "axios";
+import type { UserSchema } from "@/requests/schemas/userSchemas";
+import type { User } from "@/types/user";
 
-export async function login(requestData: LoginRequestSchema) {
+const LOGIN_LINK_REQUEST_URI = `${SERVER_URL}/${API_VERSION}/auth/login`;
+const REGISTER_URI = `${SERVER_URL}/${API_VERSION}/auth/register`;
+const CURRENT_USER_URI = `${SERVER_URL}/${API_VERSION}/`;
+
+export async function registerUser(
+  username: string,
+  email: string,
+): Promise<number> {
   const params = new URLSearchParams();
-  params.append("email", requestData.email);
-  const axiosResponse = await axios({
+  params.append("username", username);
+  params.append("email", email);
+  const response = await axios({
     method: "POST",
-    url: `${SERVER_URL}/${API_VERSION}/auth/login`,
+    url: REGISTER_URI,
     data: params,
-    params: {
-      from_url: requestData.from_url,
-    },
     headers: {
       "Content-Type": "application/x-www-form-urlencoded",
     },
-    withCredentials: true,
   });
-  return axiosResponse.data;
+  return response.status;
 }
 
-export async function getCurrentUser() {
-  const axiosResponse = await axios({
+export async function requestLoginLink(email: string, from_url?: string): Promise<number> {
+  const params = new URLSearchParams();
+  params.append("email", email);
+  const response = await axios({
+    method: "POST",
+    url: LOGIN_LINK_REQUEST_URI,
+    params: {
+      from_url: from_url,
+    },
+    data: params,
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
+  });
+  return response.status;
+}
+
+export async function requestCurrentUser(): Promise<User> {
+  const response = await axios<UserSchema>({
     method: "GET",
-    url: `${SERVER_URL}/${API_VERSION}`,
+    url: CURRENT_USER_URI,
     withCredentials: true,
-  })
-  return axiosResponse.data
+  });
+  return {
+    id: response.data.id,
+    username: response.data.username,
+    email: response.data.email,
+    accountType: response.data.account_type,
+  };
 }
