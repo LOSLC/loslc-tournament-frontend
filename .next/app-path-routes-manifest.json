@@ -1,0 +1,10 @@
+{
+  "/_not-found/page": "/_not-found",
+  "/favicon.ico/route": "/favicon.ico",
+  "/(auth)/login/page": "/login",
+  "/page": "/",
+  "/tracks/development/page": "/tracks/development",
+  "/tracks/security/page": "/tracks/security",
+  "/(dashboard)/dashboard/match/[matchId]/page": "/dashboard/match/[matchId]",
+  "/(dashboard)/dashboard/page": "/dashboard"
+}
